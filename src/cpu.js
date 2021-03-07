@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 const useCpu = () => {
   const [cpuLoad, setCpuLoad] = useState();
+  const [time, setTime] = useState();
   const [count, setCount] = useState(0);
   const countRef = useRef(count);
   countRef.current = count;
@@ -20,17 +21,18 @@ const useCpu = () => {
         })
         .then((data) => {
           setCpuLoad(data.loadAverage);
+          setTime(data.time);
           setCount(countRef.current + 1);
         })
         .catch((error) => {
           console.log(error);
         });
-    }, 1000);
+    }, 3000);
 
     return clearInterval();
   }, []);
 
-  return { cpuLoad, count };
+  return { cpuLoad, time, count };
 };
 
 export default useCpu;

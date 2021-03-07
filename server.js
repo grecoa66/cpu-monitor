@@ -11,11 +11,14 @@ app.get("/", (req, res) => {
 });
 
 app.get("/cpu-load", (req, res) => {
+  // Get CPU information
   const cpus = os.cpus().length;
   const loadAverage = os.loadavg()[0] / cpus;
 
-  console.log("Hitting cpu-load");
-  res.send({ cpus: cpus, loadAverage: loadAverage });
+  // Get current time
+  const date = new Date();
+
+  res.send({ cpus: cpus, loadAverage: loadAverage, time: date.toJSON() });
 });
 
 app.listen(port, () => {
