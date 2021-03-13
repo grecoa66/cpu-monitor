@@ -1,24 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import AverageCpuChart from "./averageCpuChart";
+import styled from "styled-components";
+
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 100vw;
+  height: 100vh;
+  background-color: #622da5;
+`;
 
 function App() {
   return (
-    <div className="App">
+    <PageWrapper>
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h2>Datadog CPU Monitor</h2>
       </header>
-    </div>
+      <AverageCpuChart />
+    </PageWrapper>
   );
 }
 
