@@ -1,16 +1,17 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import useInterval from "./useInterval";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
+import Alarm from "./alarm";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend,
+  Tooltip,
+} from "recharts";
 
-const toChartData = (rawCpuData) => {
-  const date = new Date(rawCpuData.time);
-  const displayDate = `${date.getMinutes()} : ${date.getSeconds()}`;
-  return {
-    name: displayDate,
-    y: rawCpuData?.cpuLoad,
-  };
-};
-
+// Seed 10 minutes worth of entries to the graph
 const initalGraphData = () => {
   const graphDataArray = [];
   while (graphDataArray.length < 60) {
@@ -19,15 +20,21 @@ const initalGraphData = () => {
   return graphDataArray;
 };
 
+const toChartData = (data) => {
+  const date = new Date(data.time);
+  const displayDate = `${date.getMinutes()} : ${date.getSeconds()}`;
+  return {
+    name: displayDate,
+    y: data?.loadAverage,
+  };
+};
+
 const AverageCpuChart = () => {
   const [graphData, setGraphData] = useState(initalGraphData());
   const [cpuLoad, setCpuLoad] = useState(0);
 
   const updateChart = (data) => {
-    const formattedData = toChartData({
-      cpuLoad: data.loadAverage,
-      time: data.time,
-    });
+    const formattedData = toChartData(data);
 
     setCpuLoad(data.loadAverage);
 
@@ -54,11 +61,12 @@ const AverageCpuChart = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, 10000);
+  }, 1000);
 
   return (
     <>
       <h2>Average CPU Load: {Math.round(cpuLoad * 1000) / 1000}</h2>
+      <Alarm graphData={graphData} evaluations={12} />
       <LineChart
         width={800}
         height={500}
@@ -71,15 +79,11 @@ const AverageCpuChart = () => {
         }}
       >
         <CartesianGrid strokeDasharray="2" />
-        <XAxis dataKey="name" />
-        <YAxis domain={[0, 4]} tickSize={1} allowDecimals />
+        <XAxis dataKey="name" stroke="#fff" />
+        <YAxis domain={[0, 4]} tickSize={1} allowDecimals stroke="#fff" />
+        <Tooltip />
         <Legend verticalAlign="top" margin={{ bottom: 12 }} />
-        <Line
-          name="Avg CPU Load"
-          type="monotone"
-          dataKey="y"
-          stroke="#82ca9d"
-        />
+        <Line name="Avg CPU Load" type="monotone" dataKey="y" stroke="#fff" />
       </LineChart>
     </>
   );
