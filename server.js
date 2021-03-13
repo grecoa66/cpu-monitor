@@ -18,6 +18,8 @@ app.get("/cpu-load", (req, res) => {
   // Get current time
   const date = new Date();
 
+  console.log("load: ", loadAverage);
+
   res.send({ cpus: cpus, loadAverage: loadAverage, time: date.toJSON() });
 });
 
